@@ -4,23 +4,24 @@ import styles from './styles';
 import GazeButton from 'react-360-gaze-button';
 import {screens} from "../../config/screens";
 
-const MenuItem = ({image, label, onClick, screen}) =>
+const MenuItem = ({image, label, onClick, screen, index, opacity = undefined}) =>
     <View>
-        <GazeButton duration={3000}
-                    onClick={onClick.bind(undefined, screen)}>
-            {(time, isGazed) =>
-                <View style={[styles.menuItem, isGazed ? styles.menuItemHover : {}]}>
+        <GazeButton duration={2000}
+                    onClick={onClick.bind(undefined, screen, index)}>
+            {(time, isGazed) => {
+                const opacity = time / 2000;
+                return <View style={[styles.menuItem, {opacity: opacity < 0.01 || !isGazed ? 1 : opacity}]}>
                     <Image source={image} style={{width: 130, height: 65}}/>
                     <Text>{label}</Text>
-                </View>
+                </View>;
+            }
             }
         </GazeButton>
     </View>;
 
 export class Menu extends React.Component {
 
-    onClick = (item) => {
-        console.log(item);
+    onClick = (item, index) => {
         Environment.setBackgroundImage(item.image);
     };
 
